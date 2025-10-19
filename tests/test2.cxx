@@ -2,6 +2,7 @@
 #include <catch2/catch_test_macros.hpp>
 
 #include "as2.hpp"
+#include <sstream>
 
 
 TEST_CASE("Knight attack and clone", "[Knight]") {

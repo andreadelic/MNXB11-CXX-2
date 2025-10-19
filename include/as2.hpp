@@ -39,10 +39,50 @@ namespace homework {
   // The attack should use std::cout to print something like "<name> swings a <weapon>\n"
   // The setWeapon() method should set the weapon variable (the private member variable) 
 
+class Knight : public Entity {
+public:
+    explicit Knight(const std::string& name) : Entity(name) {}
+
+    void attack() const override {
+        std::cout << name << " swings a " << weapon << "\n";
+    }
+
+    std::unique_ptr<Entity> clone() const override {
+        return std::make_unique<Knight>(*this);
+    }
+
+    void setWeapon(const std::string& w) {
+        weapon = w;
+    }
+
+private:
+    std::string weapon;
+};
+
   // as 2.2
   // Derived class Sorcerer
   // TO DO: implement attack() and clone() and setAbility()
   // Same as the Knight class
+
+class Sorcerer : public Entity {
+public:
+    explicit Sorcerer(const std::string& name) : Entity(name) {}
+
+    void attack() const override {
+        std::cout << name << " casts " << ability << "\n";
+    }
+
+    std::unique_ptr<Entity> clone() const override {
+        return std::make_unique<Sorcerer>(*this);
+    }
+
+    void setAbility(const std::string& a) {
+        ability = a;
+    }
+
+private:
+    std::string ability;
+};
 
   // as 2.3 (This is a stretch goal, hand it in, and if it does not work, you can still pass the assignment)
   // Duel class template
@@ -53,6 +93,28 @@ namespace homework {
   // - randomly select one of the two entities as the winner (use the random number generator above)
   // - print to std::cout "<name> wins the duel!\n"
   // - return a std::unique_ptr<Entity> to the winner (use clone() to copy the object)
+
+template <typename T1, typename T2>
+struct Duel {
+    Duel(T1* e1, T2* e2) : entity1(e1), entity2(e2) {}
+
+    std::unique_ptr<Entity> fight() {
+        entity1->attack();
+        entity2->attack();
+
+        double r = dist(gen);
+        Entity* winner = (r < 0.5) ? static_cast<Entity*>(entity1)
+                                    : static_cast<Entity*>(entity2);
+
+        std::cout << winner->getName() << " wins the duel!\n";
+
+        return winner->clone();
+    }
+
+private:
+    T1* entity1;
+    T2* entity2;
+};
 
 } // namespace homework
 
